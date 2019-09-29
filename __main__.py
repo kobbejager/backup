@@ -21,7 +21,7 @@ settings = {
         "subDir": ""
     },
     "backup": {
-        "command": "/opt/bkup_rpimage/bkup_rpimage.sh",
+        "alternative_script_path": None,
         "image_base_name": "sdimage",
         "full_backup_interval": "monthly"
     },
@@ -227,16 +227,32 @@ else:
 # INVOKE BACKUP
 #
 
+# bkup_rpimage script path
+if settings['backup']['alternative_script_path'] == None:
+    script_path = os.path.realpath(__file__) + '/bkup_rpimage/bkup_rpimage.sh'
+else:
+    script_path = settings['backup']['alternative_script_path']
+
+# Check if script is found
+if not os.path.isfile(script_path):
+    fatal_error(
+        message = 'File not found: {}'.format(script_path),
+        error_code = 5,
+        unmount = mountpoint)
+
+# Build backup command
 backupcmd = '{} start -c {}/{}'.format(
-    settings['backup']['command'],
+    script_path,
     backup_path, 
     image)
+
+# Call backup command
 return_code = call(backupcmd, shell=True)  
 
 if return_code > 0:
     fatal_error(
         message = 'Backup stopped with exit code {}'.format(return_code),
-        error_code = 5,
+        error_code = 6,
         unmount = mountpoint)
 
 #
@@ -249,7 +265,7 @@ return_code = call('umount ' + mountpoint, shell=True)
 if return_code > 0:
     fatal_error(
         message = 'Failed to unmount the backup volume',
-        error_code = 6)
+        error_code = 7)
 
 # Report successful backup
 now = str(datetime.datetime.now())
