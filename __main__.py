@@ -241,7 +241,7 @@ if not os.path.isfile(script_path):
         unmount = mountpoint)
 
 # Build backup command
-backupcmd = '{} start -c {}/{}'.format(
+backupcmd = 'sh {} start -c {}/{}'.format(
     script_path,
     backup_path, 
     image)
