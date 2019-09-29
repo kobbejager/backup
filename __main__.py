@@ -229,7 +229,7 @@ else:
 
 # bkup_rpimage script path
 if settings['backup']['alternative_script_path'] == None:
-    script_path = os.path.realpath(__file__) + '/bkup_rpimage/bkup_rpimage.sh'
+    script_path = os.path.dirname(os.path.realpath(__file__)) + '/bkup_rpimage/bkup_rpimage.sh'
 else:
     script_path = settings['backup']['alternative_script_path']
 
