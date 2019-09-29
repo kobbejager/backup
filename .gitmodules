@@ -1,0 +1,3 @@
+[submodule "bkup_rpimage"]
+	path = bkup_rpimage
+	url = https://github.com/lzkelley/bkup_rpimage
