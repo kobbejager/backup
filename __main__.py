@@ -23,6 +23,7 @@ settings = {
     "backup": {
         "alternative_script_path": None,
         "image_base_name": "sdimage",
+        "image_size": None,
         "full_backup_interval": "monthly"
     },
     "mqtt" : {
@@ -239,10 +240,14 @@ if not os.path.isfile(script_path):
         message = 'File not found: {}'.format(script_path),
         error_code = 5,
         unmount = mountpoint)
-
+# Additional parameters
+if settings['backup']['image_size'] != None:
+    script_options = '-s {}'.format(str(settings['backup']['image_size']))
+    
 # Build backup command
-backupcmd = 'sh {} start -c {}/{}'.format(
+backupcmd = 'sh {} start {} -c {}/{}'.format(
     script_path,
+    script_options,
     backup_path, 
     image)
 
